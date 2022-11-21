@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 const app = express()
 const port = 3000
-
+const Sorteador = require('./classes/Sorteador.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
@@ -15,18 +15,14 @@ app.get('/', (req, res) => {
 })
 
 app.post('/sorteador', (req, res) => {
-    function compareNumbers(a, b) {
-        return a - b;
-    }
-    function compareNumbersDesc(a, b) {
-        return b - a;
-    }
+    
     const tipo = req.body.tipo;
     const num1 = req.body.inicial;
     const num2 = req.body.final;
     const nome = req.body.nomes;
     const ordem = req.body.ordem;
     const total = req.body.total;
+    const sorteador = new Sorteador(tipo, num1, num2, nome, ordem, total);
     if(tipo == 1){
         min = Math.ceil(num1);
         max = Math.floor(num2);
@@ -37,9 +33,9 @@ app.post('/sorteador', (req, res) => {
         }
         
         if(ordem == 1){
-            res.send(`${array2.sort(compareNumbers)}`);
+            res.send(`${array2.sort(sorteador.compareNumbers)}`);
         }else{
-            res.send(`${array2.sort(compareNumbersDesc)}`);
+            res.send(`${array2.sort(sorteador.compareNumbersDesc)}`);
         }
     }else{
         numberOfLineBreaks = (nome.match(/\n/g)||[]).length;
